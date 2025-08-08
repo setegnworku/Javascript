@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor Appolinaire - A LinkedIn Connection That Changed Everything</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #ff6b35 100%);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            text-align: center;
+            padding: 40px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .slide-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #ff6b35, #ffd700, #ff6b35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: pulse 2s infinite;
+        }
+
+        .slide-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            color: #ffd700;
+        }
+
+        .slide-content h3 {
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: #ff6b35;
+        }
+
+        .slide-content p {
+            font-size: 1.6rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(255,107,53,0.3);
+            border: 2px solid rgba(255,215,0,0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,215,0,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 50px rgba(255,107,53,0.5);
+        }
+
+        .stat-card:hover:before {
+            animation: shimmer 1s ease-in-out;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ff6b35;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .stat-label {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            color: #ffd700;
+        }
+
+        .quote-section {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 40px;
+            margin: 30px 0;
+            border: 3px solid #ffd700;
+            font-style: italic;
+            font-size: 1.5rem;
+            line-height: 1.8;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quote-section:before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-size: 8rem;
+            color: rgba(255,215,0,0.3);
+            line-height: 1;
+        }
+
+        .timeline-item {
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 5px solid #ff6b35;
+            text-align: left;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            transform: translateX(10px);
+            background: rgba(255,255,255,0.2);
+        }
+
+        .timeline-item h4 {
+            color: #ffd700;
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .btn {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,215,0,0.5);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: rgba(255,107,53,0.3);
+            border-color: #ffd700;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255,107,53,0.4);
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #ff6b35, #ffd700, #ff6b35);
+            transition: width 0.5s ease;
+            z-index: 1000;
+            box-shadow: 0 0 20px rgba(255,107,53,0.8);
+        }
+
+        .speech-display {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 15px;
+            max-width: 300px;
+            z-index: 1000;
+            border: 2px solid rgba(255,215,0,0.4);
+            font-size: 0.85rem;
+        }
+
+        .speech-display h3 {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .speech-text {
+            font-size: 0.8rem;
+            line-height: 1.3;
+            color: #ffd700;
+            max-height: 80px;
+            overflow-y: auto;
+        }
+
+        .start-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .start-message {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ffd700;
+            animation: pulse 2s infinite;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #ff6b35, #ffd700);
+            color: #333;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255,107,53,0.5);
+        }
+
+        .start-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(255,107,53,0.7);
+        }
+
+        .advice-list {
+            text-align: left;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .advice-list li {
+            font-size: 1.4rem;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 15px;
+            border-left: 4px solid #ff6b35;
+            transition: all 0.3s ease;
+        }
+
+        .advice-list li:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateX(10px);
+        }
+
+        .highlight {
+            color: #ff6b35;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255,107,53,0.5);
+        }
+
+        .status {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            z-index: 1000;
+            border: 2px solid rgba(255,215,0,0.3);
+        }
+
+        .linkedin-icon {
+            color: #0077b5;
+            font-size: 2rem;
+            margin: 0 10px;
+        }
+
+        .linkedin-message {
+            background: rgba(255,255,255,0.95);
+            color: #333;
+            border-radius: 20px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 3px solid #0077b5;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+        }
+
+        .message-header {
+            font-weight: bold;
+            color: #0077b5;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .message-content {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .linkedin-message .highlight {
+            background: linear-gradient(45deg, #ff6b35, #ffd700);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .celebration {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            animation: celebrate 2s infinite;
+        }
+
+        @keyframes celebrate {
+            0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+            25% { transform: translate(-50%, -50%) scale(1.2) rotate(5deg); }
+            75% { transform: translate(-50%, -50%) scale(1.2) rotate(-5deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Status display -->
+    <div id="status" class="status">🚀 Ready for an Amazing Journey!</div>
+
+    <!-- Start presentation overlay -->
+    <div id="startOverlay" class="start-overlay">
+        <div class="start-message">
+            🌟 Professor Appolinaire - Director General of ILRI<br>
+            💫 A LinkedIn Connection That Changed Everything<br>
+            🎯 An Inspiring Journey from Invercargill to Dreams Realized
+        </div>
+        <button id="startBtn" class="start-btn">🚀 Start This Amazing Story!</button>
+    </div>
+    
+    <div class="slideshow-container">
+        <!-- Slide 1: Title -->
+        <div id="slide0" class="slide active">
+            <div class="slide-content">
+                <h1>🌍 Professor Appolinaire</h1>
+                <h2>Director General of ILRI</h2>
+                <p>🔗 A LinkedIn Connection That Changed Everything</p>
+                <p>✨ From Invermay, Dunedin to Dreams Realized in Nairobi</p>
+                <div class="celebration">🎉</div>
+            </div>
+        </div>
+        
+        <!-- Slide 2: The Setting - July 16, 2024 -->
+        <div id="slide1" class="slide">
+            <div class="slide-content">
+                <h2>📅 July 16, 2024 - The Moment of Sadness</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">🇳🇿</div>
+                        <div class="stat-label">New Zealand Visit</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">❄️</div>
+                        <div class="stat-label">Invercargill - Close to Antarctica</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3️⃣</div>
+                        <div class="stat-label">Senior Colleagues Selected</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">💔</div>
+                        <div class="stat-label">Not Invited - Felt Sad</div>
+                    </div>
+                </div>
+                <p>Professor Appolinaire visited Palmerston North, but not Invercargill</p>
+                <p><span class="highlight">My African role model was so close, yet so far!</span></p>
+            </div>
+        </div>
+        
+        <!-- Slide 3: The Bold LinkedIn Move -->
+        <div id="slide2" class="slide">
+            <div class="slide-content">
+                <h2>💪 The Bold Move - Taking Action!</h2>
+                <div class="timeline-item">
+                    <h4>🤔 The Dilemma</h4>
+                    <p>No email address, feeling disappointed about missing the chance to meet my role model</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>🔗 The LinkedIn Invitation</h4>
+                    <p>Sent a direct LinkedIn invitation - heart pounding with uncertainty!</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>😰 The Anxiety</h4>
+                    <p>Expected rejection - "He's probably too busy, too important to accept"</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>✨ The Miracle</h4>
+                    <p><span class="highlight">HE ACCEPTED!</span> <span class="linkedin-icon">💼</span> My heart exploded with joy!</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 4: The First Message -->
+        <div id="slide3" class="slide">
+            <div class="slide-content">
+                <h2>💌 The Heartfelt Message</h2>
+                <div class="quote-section">
+                    "Dear Professor Appolinaire, I wanted to express my gratitude for accepting my LinkedIn invitation. 
+                    It is truly an honour to be connected with someone of your stature, who has made significant 
+                    contributions to livestock genetics and sustainable agriculture. As a proud African scientist, 
+                    I am inspired by your work and leadership."
+                </div>
+                <p>🔬 <span class="highlight">Shared my work:</span> Methane emissions through genomic selection and machine learning</p>
+                <p>🐔 <span class="highlight">Mentioned ILRI connection:</span> African Chicken Genetic Gains project in Addis Ababa</p>
+                <p>🤝 <span class="highlight">Expressed hope:</span> For future collaborations and maybe meeting in person</p>
+            </div>
+        </div>
+        
+        <!-- Slide 5: The Life-Changing Reply -->
+        <div id="slide4" class="slide">
+            <div class="slide-content">
+                <h2>🌟 The Reply That Changed Everything!</h2>
+                <h3>💌 This is the message I received from Professor Appolinaire:</h3>
+                
+                <div class="linkedin-message">
+                    <div class="message-header">
+                        <strong>Appolinaire Djikeng</strong> • July 16, 2024 • 1:19 AM
+                    </div>
+                    <div class="message-content">
+                        "Dear Setegn,<br><br>
+                        Greetings and many thanks for your message. Accept my apologies for the slow response.<br><br>
+                        I was pleased to learn about your work and how it connects with some of our activities. <span class="highlight">Keep in touch with Olivier, Raphael et others.</span><br><br>
+                        You can also contact me via email: a.djikeng@cgiar.org"
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">📱</div>
+                        <div class="stat-label">Opened LinkedIn</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">😱</div>
+                        <div class="stat-label">Saw His Reply</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">💫</div>
+                        <div class="stat-label">Expected Less, Got More!</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">🚀</div>
+                        <div class="stat-label">Spirit Uplifted!</div>
+                    </div>
+                </div>
+                
+                <div class="quote-section">
+                    "The happiness was uncontrollable! He even shared his personal email! 
+                    From a professor I didn't even know personally, such valuable guidance!"
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 6: Following the Golden Advice -->
+        <div id="slide5" class="slide">
+            <div class="slide-content">
+                <h2>🎯 Following the Golden Advice</h2>
+                <div class="advice-list">
+                    <ul style="list-style: none;">
+                        <li>🔗 <strong>Connected with Olivier:</strong> Built meaningful professional relationships</li>
+                        <li>🤝 <strong>Reached out to Raphael:</strong> One of the humblest professors I know</li>
+                        <li>🌱 <strong>Nurtured Networks:</strong> Kept in touch, built trust and rapport</li>
+                        <li>📈 <strong>Professional Growth:</strong> Each connection opened new doors and opportunities</li>
+                    </ul>
+                </div>
+                <div class="quote-section">
+                    Professor Appolinaire's simple advice became the foundation 
+                    for my entire career transformation!
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 7: The Dream Position -->
+        <div id="slide6" class="slide">
+            <div class="slide-content">
+                <h2>🏆 The Dream Comes True!</h2>
+                <h3>🧬 Scientist Position in Methane Emissions</h3>
+                <p><span class="highlight">Dairy Cattle Genomic Prediction</span></p>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">🇰🇪</div>
+                        <div class="stat-label">Nairobi, Kenya</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">🔬</div>
+                        <div class="stat-label">Working with Raphael</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">🌍</div>
+                        <div class="stat-label">Back to Africa</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">✨</div>
+                        <div class="stat-label">Dreams Realized</div>
+                    </div>
+                </div>
+                <div class="quote-section">
+                    "I will meet Appolinaire in person! Working with Raphael, 
+                    one of the humblest professors I know. This is the position I dreamed of!"
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 8: Ready to Make My Mark -->
+        <div id="slide7" class="slide">
+            <div class="slide-content">
+                <h2>🌟 Ready to Make My Mark on Africa!</h2>
+                <div class="timeline-item">
+                    <h4>🎯 Leadership That Inspires</h4>
+                    <p>I want a leader who will inspire me to express my full potential</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>🧠 Bright Minds Together</h4>
+                    <p>Excited to work alongside these brilliant people</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>🌍 Impact on Africa</h4>
+                    <p>Together, we will put our mark on Africa's agricultural future</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>🚀 Sustainable Innovation</h4>
+                    <p>Contributing to methane reduction and sustainable livestock production</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 9: Deep Gratitude -->
+        <div id="slide8" class="slide">
+            <div class="slide-content">
+                <h2>🙏 Profound Gratitude</h2>
+                <div class="quote-section">
+                    "Professor Appolinaire, your simple act of accepting my LinkedIn invitation 
+                    and providing guidance has literally transformed my career trajectory. 
+                    From a sad moment in Invercargill to landing my dream position in Nairobi - 
+                    this is the power of true leadership and mentorship!"
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">💫</div>
+                        <div class="stat-label">One LinkedIn Accept</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">🎯</div>
+                        <div class="stat-label">Life-Changing Advice</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">🌟</div>
+                        <div class="stat-label">Career Transformation</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">🚀</div>
+                        <div class="stat-label">Dreams Achieved</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 10: Conclusion -->
+        <div id="slide9" class="slide">
+            <div class="slide-content">
+                <h1>🌍 Thank You, Professor Appolinaire!</h1>
+                <h2>From LinkedIn to Life-Changing Leadership</h2>
+                <p>🔗 A simple connection that sparked an incredible journey</p>
+                <p>💫 From Invercargill sadness to Nairobi success</p>
+                <div class="quote-section">
+                    You showed me that true leaders are accessible, caring, and willing to lift others up. 
+                    Your advice to connect with Olivier and Raphael opened doors I never imagined possible. 
+                    Now, working on methane emissions in dairy cattle genomics, I'm ready to make my mark on Africa 
+                    alongside these brilliant minds you introduced me to! I believe I am proficient in machine learning, 
+                    AI, web development, and genomic prediction, which will help me contribute across various disciplines. 
+                    For example, I created this presentation using JavaScript, React, CSS, HTML and APIs, demonstrating 
+                    how these technical skills combined with genomics are exactly what Africa needs for its agricultural transformation.
+                </div>
+                <h3>🙏 Forever grateful for your inspiration and guidance! 🙏</h3>
+                <div class="celebration">🎊🎉🌟</div>
+            </div>
+        </div>
+        
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+    
+    <div class="controls">
+        <button id="stopBtn" class="btn">⏹️ Stop</button>
+        <button id="restartBtn" class="btn">🔄 Restart</button>
+        <button id="musicToggleBtn" class="btn">🎵 Audio On</button>
+        <input type="range" id="volumeSlider" min="0" max="100" value="70" style="width: 100px; margin: 0 10px;">
+    </div>
+    
+    <!-- Speech display -->
+    <div id="speechTextContainer" class="speech-display">
+        <h3>🗣️ Now Speaking:</h3>
+        <div id="currentSpeechText" class="speech-text"></div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        let totalSlides = 10;
+        let isPlaying = false;
+        let slideInterval;
+        let speechSynth = window.speechSynthesis;
+        let currentUtterance = null;
+        let speechEnabled = true;
+        let speechFinished = false;
+        
+        // Speech texts for each slide
+        const speechTexts = [
+            "Welcome to this incredible story of Professor Appolinaire, Director General of the International Livestock Research Institute! This is the amazing journey of how a LinkedIn connection transformed a career and changed everything. From Invermay, Dunedin, New Zealand to the vibrant scientific community of Nairobi, Kenya - this is a story of courage, inspiration, and dreams realized.",
+            
+            "July 16th, 2024 - A day that started with disappointment but would become the catalyst for something extraordinary. Professor Appolinaire was visiting New Zealand, but only Palmerston North in the north. I was based in Invermay, Dunedin, in the southern part of New Zealand. Three senior colleagues were selected to attend his presentation, and while it made sense for seniors to go, I felt genuinely sad. This was my African role model, so close geographically, yet so far from my reach.",
+            
+            "But instead of giving up, I decided to take bold action! I didn't have his email address, so I made a courageous decision - I would reach out directly through LinkedIn. My heart was pounding as I sent that invitation. I fully expected him to ignore it or politely decline. After all, he's the Director General of elri, probably overwhelmed with requests and responsibilities. But then something magical happened - HE ACCEPTED! I couldn't believe it. My heart exploded with joy and disbelief.",
+            
+            "With trembling fingers, I crafted my first message to this incredible leader. I expressed my deep gratitude for accepting my invitation and shared my background as a proud African scientist working on methane emissions through genomic selection and machine learning. I mentioned my time at elri with the African Chicken Genetic Gains project in Addis Ababa, and how his work had inspired me. I shared my disappointment about not being able to attend his presentation in person, and my hope for future collaborations and perhaps meeting him someday.",
+            
+            "Then came the moment that changed everything! When I opened LinkedIn and saw his reply, I was absolutely stunned. This is the actual message I received from Professor Appolinaire on July 16th, 2024. He wrote: Dear Setegn, Greetings and many thanks for your message. Accept my apologies for the slow response. I was pleased to learn about your work and how it connects with some of our activities. Keep in touch with Olivier, Raphael and others. You can also contact me via email. Not only did he respond personally, but he even shared his email address! The happiness was uncontrollable. Here was the Director General of elri, taking time to provide meaningful guidance and opening doors for my future.",
+            
+            "I immediately followed his golden advice with enthusiasm. I reached out to both Olivier and Raphael, and built meaningful professional relationships. Both professors are brilliant and humble icons of elri. I nurtured these networks, kept in touch regularly, and built trust with each connection. Each relationship opened new doors and created opportunities. Professor Appolinaire's advice became the foundation for my career transformation.",
+            
+            "And then the dream came true! I landed the scientist position I had always dreamed of - working on methane emissions in dairy cattle using genomic prediction techniques. The position is in Nairobi, Kenya, bringing me back to Africa where my heart belongs. Even more incredibly, I'll be working directly with Raphael, that humble and brilliant professor I connected with thanks to Professor Appolinaire's advice. Everything was coming full circle in the most beautiful way possible.",
+            
+            "Now I'm ready to make my mark on Africa! I want to work with leaders who inspire me to express my full potential, and Professor Appolinaire has shown me exactly what that looks like. Excited to collaborate with these brilliant minds, I'm prepared to contribute meaningfully to Africa's agricultural future. Together, we'll work on sustainable innovation, focusing on methane reduction and sustainable livestock production.",
+            
+            "My gratitude to Professor Appolinaire runs deeper than words can express. Your simple act of accepting my LinkedIn invitation and providing thoughtful guidance has literally transformed my career trajectory. From that sad moment in Invercargill, feeling left out and distant from my role model, to landing my dream position in Nairobi and working alongside brilliant scientists - this transformation is the direct result of your kindness and wisdom. This is the true power of authentic leadership and meaningful mentorship.",
+            
+            "Thank you, Professor Appolinaire, for showing me that true leaders are accessible, caring, and genuinely committed to lifting others up. Your advice to connect with Olivier and Raphael opened doors I never imagined possible. Now, as I prepare to work on cutting-edge methane emissions research in dairy cattle genomics, I'm ready to make my mark on Africa alongside these brilliant minds you introduced me to. I believe I am proficient in machine learning, AI, web development, and genomic prediction, which will help me contribute across various disciplines. For example, I created this presentation using JavaScript, React, CSS, HTML and APIs, demonstrating how these technical skills combined with genomics are exactly what Africa needs for its agricultural transformation. This LinkedIn connection didn't just change my career - it changed my life! Forever grateful for your inspiration, guidance, and the incredible journey you set in motion.",
+        ];
+        
+        function updateStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+        
+        function showSlide(n) {
+            const slides = document.getElementsByClassName('slide');
+            if (n >= totalSlides) currentSlide = 0;
+            if (n < 0) currentSlide = totalSlides - 1;
+            
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].classList.remove('active');
+            }
+            
+            slides[currentSlide].classList.add('active');
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            // Speak the slide content
+            if (speechEnabled && isPlaying) {
+                speakText(speechTexts[currentSlide]);
+            }
+            
+            updateStatus(`🎬 Slide ${currentSlide + 1} of ${totalSlides} - An Amazing Journey!`);
+        }
+        
+        function speakText(text) {
+            speechFinished = false;
+            
+            // Clear any existing speech
+            if (speechSynth.speaking) {
+                speechSynth.cancel();
+                setTimeout(() => {
+                    startSpeaking();
+                }, 1000);
+            } else {
+                startSpeaking();
+            }
+            
+            function startSpeaking() {
+                try {
+                    currentUtterance = new SpeechSynthesisUtterance(text);
+                    currentUtterance.rate = 0.8; // Slower for clarity
+                    currentUtterance.pitch = 1.0;
+                    currentUtterance.volume = document.getElementById('volumeSlider').value / 100;
+                    currentUtterance.lang = 'en-US';
+                    
+                    // Display current speech text
+                    document.getElementById('currentSpeechText').textContent = text;
+                    
+                    // Event listeners
+                    currentUtterance.onstart = function() {
+                        speechFinished = false;
+                        updateStatus(`🎤 Speaking slide ${currentSlide + 1}... (Please wait for completion)`);
+                    };
+                    
+                    currentUtterance.onend = function() {
+                        speechFinished = true;
+                        updateStatus(`✅ Slide ${currentSlide + 1} speech completed. Moving to next slide...`);
+                        
+                        // Only advance if this is not the last slide
+                        if (isPlaying && currentSlide < totalSlides - 1) {
+                            setTimeout(() => {
+                                if (isPlaying && speechFinished) {
+                                    nextSlide();
+                                }
+                            }, 3000); // 3 second pause
+                        } else if (currentSlide === totalSlides - 1) {
+                            updateStatus('🎉 Amazing story completed! Professor Appolinaire changed everything!');
+                            setTimeout(() => {
+                                stopPresentation();
+                            }, 2000);
+                        }
+                    };
+                    
+                    currentUtterance.onerror = function(event) {
+                        console.warn('Speech error:', event.error);
+                        speechFinished = true;
+                        updateStatus(`⚠️ Speech issue on slide ${currentSlide + 1} - continuing in 5 seconds...`);
+                        
+                        setTimeout(() => {
+                            if (isPlaying && currentSlide < totalSlides - 1) {
+                                nextSlide();
+                            }
+                        }, 5000);
+                    };
+                    
+                    // Only speak if enabled and browser supports it
+                    if (speechEnabled && 'speechSynthesis' in window) {
+                        speechSynth.speak(currentUtterance);
+                    } else {
+                        speechFinished = true;
+                        // Auto-advance if speech is disabled
+                        setTimeout(() => {
+                            if (isPlaying && currentSlide < totalSlides - 1) {
+                                nextSlide();
+                            }
+                        }, 8000); // 8 seconds per slide when no speech
+                    }
+                } catch (error) {
+                    console.warn('Speech synthesis error:', error);
+                    speechFinished = true;
+                    updateStatus(`⚠️ Speech unavailable - slide ${currentSlide + 1}`);
+                    setTimeout(() => {
+                        if (isPlaying && currentSlide < totalSlides - 1) {
+                            nextSlide();
+                        }
+                    }, 5000);
+                }
+            }
+        }
+        
+        function nextSlide() {
+            // Check that speech is truly finished
+            if (speechEnabled && (!speechFinished || speechSynth.speaking)) {
+                updateStatus(`⏳ Waiting for speech to complete on slide ${currentSlide + 1}...`);
+                setTimeout(nextSlide, 1000);
+                return;
+            }
+            
+            currentSlide++;
+            if (currentSlide >= totalSlides) {
+                stopPresentation();
+                return;
+            }
+            
+            updateStatus(`🚀 Advancing to slide ${currentSlide + 1}...`);
+            showSlide(currentSlide);
+        }
+        
+        function startPresentation() {
+            isPlaying = true;
+            currentSlide = 0;
+            speechFinished = false;
+            document.getElementById('startOverlay').style.display = 'none';
+            updateStatus('🎬 Presentation Started - Get ready for an amazing story!');
+            
+            // Ensure speech synthesis is ready
+            if (speechSynth.speaking) {
+                speechSynth.cancel();
+                setTimeout(() => {
+                    showSlide(currentSlide);
+                }, 1500);
+            } else {
+                showSlide(currentSlide);
+            }
+        }
+        
+        function stopPresentation() {
+            isPlaying = false;
+            clearTimeout(slideInterval);
+            
+            // Stop speech
+            if (speechSynth.speaking) {
+                speechSynth.cancel();
+            }
+            
+            updateStatus('⏹️ Presentation Stopped');
+            document.getElementById('currentSpeechText').textContent = 'Presentation stopped';
+        }
+        
+        function restartPresentation() {
+            stopPresentation();
+            currentSlide = 0;
+            showSlide(currentSlide);
+            startPresentation();
+        }
+        
+        function toggleAudio() {
+            speechEnabled = !speechEnabled;
+            const btn = document.getElementById('musicToggleBtn');
+            btn.textContent = speechEnabled ? '🎵 Audio On' : '🔇 Audio Off';
+            
+            if (!speechEnabled && speechSynth.speaking) {
+                speechSynth.cancel();
+                document.getElementById('currentSpeechText').textContent = 'Audio disabled';
+            } else if (speechEnabled && isPlaying) {
+                speakText(speechTexts[currentSlide]);
+            }
+        }
+        
+        // Event listeners
+        document.getElementById('startBtn').addEventListener('click', startPresentation);
+        document.getElementById('stopBtn').addEventListener('click', stopPresentation);
+        document.getElementById('restartBtn').addEventListener('click', restartPresentation);
+        document.getElementById('musicToggleBtn').addEventListener('click', toggleAudio);
+        
+        // Volume control
+        document.getElementById('volumeSlider').addEventListener('input', function(e) {
+            if (currentUtterance) {
+                currentUtterance.volume = e.target.value / 100;
+            }
+        });
+        
+        // Keyboard controls
+        document.addEventListener('keydown', function(e) {
+            switch(e.key) {
+                case ' ':
+                case 'Enter':
+                    if (!isPlaying) startPresentation();
+                    else stopPresentation();
+                    break;
+                case 'Escape':
+                    stopPresentation();
+                    break;
+                case 'r':
+                case 'R':
+                    restartPresentation();
+                    break;
+            }
+        });
+        
+        // Initialize
+        updateStatus('🌟 Ready to start this incredible journey!');
+        document.getElementById('currentSpeechText').textContent = 'Click "Start This Amazing Story!" to begin the inspiring journey';
+        
+        // Check for speech synthesis support
+        if (!('speechSynthesis' in window)) {
+            updateStatus('⚠️ Speech synthesis not supported');
+            document.getElementById('currentSpeechText').textContent = 'Speech synthesis not available - presentation will continue silently';
+            speechEnabled = false;
+            document.getElementById('musicToggleBtn').textContent = '🔇 No Audio';
+        } else {
+            // Load voices when available
+            if (speechSynth.getVoices().length === 0) {
+                speechSynth.addEventListener('voiceschanged', function() {
+                    updateStatus('🎤 Speech voices loaded and ready!');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
